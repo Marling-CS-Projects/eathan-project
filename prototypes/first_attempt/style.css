@@ -1,0 +1,38 @@
+body {
+	background-color: #555;
+}
+
+canvas {
+	position: absolute;
+	top: calc( 50% - 256px );
+	left: calc( 50% - 256px );
+	box-shadow: 0 0 2px #000;
+}
+
+#win {
+	position: absolute;
+	top: calc( 50% - 256px );
+	left: calc( 50% - 256px );
+	background-color: rgba(0,0,0,.8);
+	text-align: center;
+	width: 512px;
+	padding-top: 150px;
+	height: 362px;
+	color: #eee;
+	opacity: 0;
+	display: none;
+	transition: opacity .5s;
+}
+#win.showing {
+	display: inline-block;
+	opacity: 1;
+}
+#win, input, button {
+	font: 20px Helvetica;
+}
+input {
+	width: 40px;
+}
+button {
+	padding: 8px;
+}
