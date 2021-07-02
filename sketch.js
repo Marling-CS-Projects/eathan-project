@@ -1,12 +1,10 @@
 var cols, rows;
-var w = 30;
+var w = 20;
 var grid = []; 
-
 var current;
-
 var stack = [];
-
 var s;
+var sp;
 
 function Player() {
   this.x = 0;
@@ -14,21 +12,24 @@ function Player() {
   this.xspeed = 0;
   this.yspeed = 0; 
 
-  //This is how fast the player can move the character
+  //This makes the player stay still in the top left when the game is started
 
   this.dir = function(x, y) {
-    this.xspeed = x;
-    this.yspeed = y;
+    this.xspeed = x/10;
+    this.yspeed = y/10;
   }
 
   this.update = function() {
-      this.x = this.x + this.xspeed;
-      this.y = this.y + this.yspeed;
+      this.x = this.x + this.xspeed*w;
+      this.y = this.y + this.yspeed*w;
+
+      this.x = constrain(this.x, 0, width-w);
+      this.y = constrain(this.y, 0, height-w);
   }
 
   this.show = function() {
       fill(255);
-      rect(this.x, this.y, 10, 10);
+      rect(this.x, this.y, w, w);
   }
   
 }
@@ -38,8 +39,7 @@ function setup() {
   s = new Player();
   cols = floor(width/w);
   rows = floor(height/w);
-  frameRate(1000);
-
+  frameRate(10000);
 //This is the setup of the grid with cols and rows
 
   for (var j = 0; j < rows; j++) {
@@ -50,6 +50,16 @@ function setup() {
   }
 
   current = grid[0];
+
+  sp = createVector(random(width), random(height));
+
+  function pickLocation() {
+    var cols = floor(width/w);
+    var rows = floor(height/w);
+
+  sp = createVector(floor(random(cols)), floor(random(rows)));
+  sp.mult(w);
+  }
 }
 //This is grid refferences with i and j 
 
@@ -68,7 +78,11 @@ function draw() {
     } else if (keyCode === LEFT_ARROW) {
       s.dir(-1, 0);
     }
-  //This is the key inputs that allows the player to move
+    //This is the key inputs that allows the player to move
+
+  fill(255, 0, 100);
+  rect(sp.x, sp.y, w, w)
+  //This is the colour of the Speed Power-up
 
   current.visited = true;
   current.highlight();
@@ -138,7 +152,7 @@ function Cell(i, j) {
     var x = this.i*w;
     var y = this.j*w;
     noStroke();
-    fill(0, 10000, 100000, 100000)
+    fill(255, 0, 0, 0)
     rect(x, y, w, w);
   }
 
@@ -194,3 +208,4 @@ function removeWalls(a, b) {
 }
 
 //This part of my code deals with the y-axis removing walls vertically.
+
