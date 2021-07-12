@@ -1,44 +1,38 @@
 var cols, rows;
-var w = 20;
+var cell_width = 20;
 var grid = []; 
 var current;
 var stack = [];
-var s;
+var player;
 var sp;
 
 function Player() {
   this.x = 0;
   this.y = 0;
-  this.xspeed = 0;
-  this.yspeed = 0; 
 
   //This makes the player stay still in the top left when the game is started
 
   this.dir = function(x, y) {
-    this.xspeed = x/10;
-    this.yspeed = y/10;
+    this.x += x;
+    this.y += y;
   }
 
   this.update = function() {
-      this.x = this.x + this.xspeed*w;
-      this.y = this.y + this.yspeed*w;
-
-      this.x = constrain(this.x, 0, width-w);
-      this.y = constrain(this.y, 0, height-w);
+      
   }
 
   this.show = function() {
       fill(255);
-      rect(this.x, this.y, w, w);
+      rect(this.x * cell_width, this.y * cell_width, cell_width, cell_width);
   }
   
 }
 
 function setup() {
   createCanvas(600, 600);
-  s = new Player();
-  cols = floor(width/w);
-  rows = floor(height/w);
+  player = new Player();
+  cols = floor(width/cell_width);
+  rows = floor(height/cell_width);
   frameRate(10000);
 //This is the setup of the grid with cols and rows
 
@@ -54,34 +48,34 @@ function setup() {
   sp = createVector(random(width), random(height));
 
   function pickLocation() {
-    var cols = floor(width/w);
-    var rows = floor(height/w);
+    var cols = floor(width/cell_width);
+    var rows = floor(height/cell_width);
 
   sp = createVector(floor(random(cols)), floor(random(rows)));
-  sp.mult(w);
+  sp.mult(cell_width);
   }
 }
 //This is grid refferences with i and j 
 
 function draw() {
   background(1);
-  s.update();
-  s.show();
+  player.update();
+  player.show();
   for (var i = 0; i < grid.length; i++) {
   grid[i].show(); }
     if (keyCode === UP_ARROW) {
-      s.dir(0, -1);
+      player.dir(0, -1);
     } else if (keyCode === DOWN_ARROW) {
-      s.dir(0, 1);
+      player.dir(0, 1);
     } else if (keyCode === RIGHT_ARROW) {
-      s.dir(1, 0);
+      player.dir(1, 0);
     } else if (keyCode === LEFT_ARROW) {
-      s.dir(-1, 0);
+      player.dir(-1, 0);
     }
     //This is the key inputs that allows the player to move
 
   fill(255, 0, 100);
-  rect(sp.x, sp.y, w, w)
+  rect(sp.x, sp.y, cell_width, cell_width)
   //This is the colour of the Speed Power-up
 
   current.visited = true;
@@ -149,33 +143,33 @@ function Cell(i, j) {
 
   }
   this.highlight = function() {
-    var x = this.i*w;
-    var y = this.j*w;
+    var x = this.i*cell_width;
+    var y = this.j*cell_width;
     noStroke();
     fill(255, 0, 0, 0)
-    rect(x, y, w, w);
+    rect(x, y, cell_width, cell_width);
   }
 
   this.show = function() {
-    var x = this.i*w;
-    var y = this.j*w;
+    var x = this.i*cell_width;
+    var y = this.j*cell_width;
     stroke(10000);
     if(this.walls[0]) {
-      line(x,y,x+w,y);
+      line(x,y,x+cell_width,y);
     }
     if(this.walls[1]) {
-      line(x+w,y,x+w,y+w);
+      line(x+cell_width,y,x+cell_width,y+cell_width);
     }
     if(this.walls[2]) {
-      line(x+w,y+w,x,y+w);
+      line(x+cell_width,y+cell_width,x,y+cell_width);
     }
     if(this.walls[3]) {
-      line(x,y+w,x,y);
+      line(x,y+cell_width,x,y);
     }
     if (this.visited) {
       noStroke();
       fill(0, 150, 10000, 50);
-      rect(x, y, w, w);
+      rect(x, y, cell_width, cell_width);
     }
   }
 
