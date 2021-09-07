@@ -4,7 +4,7 @@ var grid = [];
 var current;
 var stack = [];
 var player;
-var sp;
+var speed_power;
 
 function Player() {
   this.x = 0;
@@ -33,7 +33,7 @@ function setup() {
   player = new Player();
   cols = floor(width/cell_width);
   rows = floor(height/cell_width);
-  frameRate(10000);
+  frameRate(100);
 //This is the setup of the grid with cols and rows
 
   for (var j = 0; j < rows; j++) {
@@ -43,16 +43,16 @@ function setup() {
     }
   }
 
+
   current = grid[0];
 
-  sp = createVector(random(width), random(height));
+  speed_power = createVector(random(width), random(height));
 
   function pickLocation() {
     var cols = floor(width/cell_width);
     var rows = floor(height/cell_width);
-
-  sp = createVector(floor(random(cols)), floor(random(rows)));
-  sp.mult(cell_width);
+    speed_power = createVector(floor(random(cols)), floor(random(rows)));
+    speed_power.mult(cell_width);
   }
 }
 //This is grid refferences with i and j 
@@ -71,11 +71,11 @@ function draw() {
       player.dir(1, 0);
     } else if (keyCode === LEFT_ARROW) {
       player.dir(-1, 0);
-    }
+    } 
     //This is the key inputs that allows the player to move
 
   fill(255, 0, 100);
-  rect(sp.x, sp.y, cell_width, cell_width)
+  rect(speed_power.x, speed_power.y, cell_width, cell_width)
   //This is the colour of the Speed Power-up
 
   current.visited = true;
