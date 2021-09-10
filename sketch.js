@@ -1,6 +1,6 @@
 var cols, rows;
-var cell_width = 20;
-var grid = []; 
+var cell_width = 30;
+var grid = [];
 var current;
 var stack = [];
 var player;
@@ -12,33 +12,34 @@ function Player() {
 
   //This makes the player stay still in the top left when the game is started
 
-  this.dir = function(x, y) {
+  this.dir = function (x, y) {
     this.x += x;
     this.y += y;
   }
 
-  this.update = function() {
-      
+  this.update = function () {
+
   }
 
-  this.show = function() {
-      fill(255);
-      rect(this.x * cell_width, this.y * cell_width, cell_width, cell_width);
+  this.show = function () {
+    fill(255);
+    rect(this.x * cell_width, this.y * cell_width, cell_width, cell_width);
+
   }
-  
+
 }
 
 function setup() {
   createCanvas(600, 600);
   player = new Player();
-  cols = floor(width/cell_width);
-  rows = floor(height/cell_width);
-  frameRate(100);
-//This is the setup of the grid with cols and rows
+  cols = floor(width / cell_width);
+  rows = floor(height / cell_width);
+  frameRate(1000);
+  //This is the setup of the grid with cols and rows
 
   for (var j = 0; j < rows; j++) {
     for (var i = 0; i < cols; i++) {
-      var cell = new Cell(i,j);
+      var cell = new Cell(i, j);
       grid.push(cell);
     }
   }
@@ -49,30 +50,39 @@ function setup() {
   speed_power = createVector(random(width), random(height));
 
   function pickLocation() {
-    var cols = floor(width/cell_width);
-    var rows = floor(height/cell_width);
+    var cols = floor(width / cell_width);
+    var rows = floor(height / cell_width);
     speed_power = createVector(floor(random(cols)), floor(random(rows)));
     speed_power.mult(cell_width);
   }
 }
 //This is grid refferences with i and j 
 
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    player.dir(0, -1);
+
+  } else if (keyCode === DOWN_ARROW) {
+    player.dir(0, 1);
+
+  } else if (keyCode === RIGHT_ARROW) {
+    player.dir(1, 0);
+    
+  } else if (keyCode === LEFT_ARROW) {
+    player.dir(-1, 0);
+  }
+}
+
 function draw() {
   background(1);
   player.update();
   player.show();
   for (var i = 0; i < grid.length; i++) {
-  grid[i].show(); }
-    if (keyCode === UP_ARROW) {
-      player.dir(0, -1);
-    } else if (keyCode === DOWN_ARROW) {
-      player.dir(0, 1);
-    } else if (keyCode === RIGHT_ARROW) {
-      player.dir(1, 0);
-    } else if (keyCode === LEFT_ARROW) {
-      player.dir(-1, 0);
-    } 
-    //This is the key inputs that allows the player to move
+    grid[i].show();
+  }
+  
+  //This is the key inputs that allows the player to move
 
   fill(255, 0, 100);
   rect(speed_power.x, speed_power.y, cell_width, cell_width)
@@ -92,19 +102,20 @@ function draw() {
     current = next;
   } else if (stack.length > 0) {
     current = stack.pop();
-    
+
   }
-    
+
 }
 
 //This reads every cell and determins whether it has been visited or not
 
 function index(i, j) {
-  if(i < 0 || j < 0 || i > cols-1 || j > rows-1) {
+  if (i < 0 || j < 0 || i > cols - 1 || j > rows - 1) {
     return -1;
   }
   return i + j * cols;
 }
+
 
 function Cell(i, j) {
   this.i = i;
@@ -112,13 +123,13 @@ function Cell(i, j) {
   this.walls = [true, true, true, true];
   this.visited = false;
 
-  this.checkNeighbors = function() {
+  this.checkNeighbors = function () {
     var neighbors = [];
 
-    var top    = grid[index(i, j-1)];
-    var right  = grid[index(i+1, j)];
-    var bottom = grid[index(i, j+1)];
-    var left   = grid[index(i-1, j)];
+    var top = grid[index(i, j - 1)];
+    var right = grid[index(i + 1, j)];
+    var bottom = grid[index(i, j + 1)];
+    var left = grid[index(i - 1, j)];
 
     if (top && !top.visited) {
       neighbors.push(top);
@@ -139,32 +150,32 @@ function Cell(i, j) {
     } else {
       return undefined;
     }
-//This is how the DFS algorithm moves through the maze removing walls when needed
+    //This is how the DFS algorithm moves through the maze removing walls when needed
 
   }
-  this.highlight = function() {
-    var x = this.i*cell_width;
-    var y = this.j*cell_width;
+  this.highlight = function () {
+    var x = this.i * cell_width;
+    var y = this.j * cell_width;
     noStroke();
     fill(255, 0, 0, 0)
     rect(x, y, cell_width, cell_width);
   }
 
-  this.show = function() {
-    var x = this.i*cell_width;
-    var y = this.j*cell_width;
-    stroke(10000);
-    if(this.walls[0]) {
-      line(x,y,x+cell_width,y);
+  this.show = function () {
+    var x = this.i * cell_width;
+    var y = this.j * cell_width;
+    stroke(1000);
+    if (this.walls[0]) {
+      line(x, y, x + cell_width, y);
     }
-    if(this.walls[1]) {
-      line(x+cell_width,y,x+cell_width,y+cell_width);
+    if (this.walls[1]) {
+      line(x + cell_width, y, x + cell_width, y + cell_width);
     }
-    if(this.walls[2]) {
-      line(x+cell_width,y+cell_width,x,y+cell_width);
+    if (this.walls[2]) {
+      line(x + cell_width, y + cell_width, x, y + cell_width);
     }
-    if(this.walls[3]) {
-      line(x,y+cell_width,x,y);
+    if (this.walls[3]) {
+      line(x, y + cell_width, x, y);
     }
     if (this.visited) {
       noStroke();
@@ -189,7 +200,7 @@ function removeWalls(a, b) {
     b.walls[3] = false;
   }
 
-//This part of my new code deals with the x-axis and removing walls horizontaly.
+  //This part of my new code deals with the y-axis and removing walls verticaly (colls).
 
   var y = a.j - b.j;
   if (y === 1) {
@@ -201,5 +212,6 @@ function removeWalls(a, b) {
   }
 }
 
-//This part of my code deals with the y-axis removing walls vertically.
+
+//This part of my code deals with the x-axis removing walls horizontally (rows).
 
